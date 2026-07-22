@@ -8,27 +8,26 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "blogs")
+@Table(name = "team_members")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Blog {
+public class TeamMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String name;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    @Column(nullable = false)
+    private String role;
 
-    private String author;
+    @Column(columnDefinition = "TEXT")
+    private String quote;
 
     private String imageUrl;
-
-    private String videoUrl;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;

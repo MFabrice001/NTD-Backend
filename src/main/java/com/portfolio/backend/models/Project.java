@@ -8,11 +8,11 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "blogs")
+@Table(name = "projects")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Blog {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,12 @@ public class Blog {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    @Column(nullable = false)
+    private String category; // e.g., "COMMERCIAL", "RESIDENTIAL", "CIVIL WORKS"
 
-    private String author;
+    private String location;
+    
+    private String year;
 
     private String imageUrl;
 
