@@ -1,16 +1,20 @@
 package com.portfolio.backend.controllers;
 
 import com.portfolio.backend.models.Blog;
+import com.portfolio.backend.models.ContactMessage;
 import com.portfolio.backend.models.Faq;
 import com.portfolio.backend.models.Project;
 import com.portfolio.backend.models.TeamMember;
 import com.portfolio.backend.services.BlogService;
+import com.portfolio.backend.services.ContactMessageService;
 import com.portfolio.backend.services.FaqService;
 import com.portfolio.backend.services.ProjectService;
 import com.portfolio.backend.services.TeamMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -21,13 +25,15 @@ public class AdminController {
     private final FaqService faqService;
     private final ProjectService projectService;
     private final TeamMemberService teamMemberService;
+    private final ContactMessageService contactMessageService;
 
     @Autowired
-    public AdminController(BlogService blogService, FaqService faqService, ProjectService projectService, TeamMemberService teamMemberService) {
+    public AdminController(BlogService blogService, FaqService faqService, ProjectService projectService, TeamMemberService teamMemberService, ContactMessageService contactMessageService) {
         this.blogService = blogService;
         this.faqService = faqService;
         this.projectService = projectService;
         this.teamMemberService = teamMemberService;
+        this.contactMessageService = contactMessageService;
     }
 
     // --- Blogs ---
@@ -111,6 +117,18 @@ public class AdminController {
     @DeleteMapping("/team-members/{id}")
     public ResponseEntity<Void> deleteTeamMember(@PathVariable Long id) {
         teamMemberService.deleteTeamMember(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // --- Contact Messages ---
+    @GetMapping("/contact-messages")
+    public ResponseEntity<List<ContactMessage>> getAllContactMessages() {
+        return ResponseEntity.ok(contactMessageService.getAllMessages());
+    }
+
+    @DeleteMapping("/contact-messages/{id}")
+    public ResponseEntity<Void> deleteContactMessage(@PathVariable Long id) {
+        contactMessageService.deleteMessage(id);
         return ResponseEntity.noContent().build();
     }
 }

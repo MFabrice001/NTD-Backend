@@ -1,10 +1,12 @@
 package com.portfolio.backend.controllers;
 
 import com.portfolio.backend.models.Blog;
+import com.portfolio.backend.models.ContactMessage;
 import com.portfolio.backend.models.Faq;
 import com.portfolio.backend.models.Project;
 import com.portfolio.backend.models.TeamMember;
 import com.portfolio.backend.services.BlogService;
+import com.portfolio.backend.services.ContactMessageService;
 import com.portfolio.backend.services.FaqService;
 import com.portfolio.backend.services.ProjectService;
 import com.portfolio.backend.services.TeamMemberService;
@@ -23,13 +25,20 @@ public class PublicController {
     private final FaqService faqService;
     private final ProjectService projectService;
     private final TeamMemberService teamMemberService;
+    private final ContactMessageService contactMessageService;
 
     @Autowired
-    public PublicController(BlogService blogService, FaqService faqService, ProjectService projectService, TeamMemberService teamMemberService) {
+    public PublicController(BlogService blogService, FaqService faqService, ProjectService projectService, TeamMemberService teamMemberService, ContactMessageService contactMessageService) {
         this.blogService = blogService;
         this.faqService = faqService;
         this.projectService = projectService;
         this.teamMemberService = teamMemberService;
+        this.contactMessageService = contactMessageService;
+    }
+
+    @PostMapping("/contact-messages")
+    public ResponseEntity<ContactMessage> submitContactMessage(@RequestBody ContactMessage message) {
+        return ResponseEntity.ok(contactMessageService.createMessage(message));
     }
 
     @GetMapping("/blogs")
