@@ -32,6 +32,9 @@ public class Project {
 
     private String videoUrl;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
