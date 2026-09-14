@@ -23,4 +23,15 @@ public class User {
     private String password;
 
     private String role;
+    
+    private String fullName;
+    
+    @Column(unique = true)
+    private String email;
+    
+    private String otp;
+    
+    private java.time.LocalDateTime otpExpiry;
+    
+    private Boolean isFirstLogin = true;
 }

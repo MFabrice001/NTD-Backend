@@ -40,7 +40,8 @@ public class ContactMessageService {
         // Send email notification
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo("realfabrice20@gmail.com");
+            mailMessage.setTo("ntdbuilddesignsolution@gmail.com");
+            mailMessage.setFrom("ntdbuilddesignsolution@gmail.com");
             mailMessage.setSubject("New Contact Message from " + message.getFirstName() + " " + message.getLastName());
             mailMessage.setText(
                 "You have received a new contact message on your website.\n\n" +
