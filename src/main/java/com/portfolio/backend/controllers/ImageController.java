@@ -48,7 +48,7 @@ public class ImageController {
                 Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
             }
             
-            String fileUrl = "http://localhost:8080/uploads/" + uniqueFileName;
+            String fileUrl = "/uploads/" + uniqueFileName;
             response.put("url", fileUrl);
             
             return ResponseEntity.ok(response);
