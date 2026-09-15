@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "https://ntd-frontend-gamma.vercel.app"}, maxAge = 3600)
+
 @RestController
 @RequestMapping("/api/public")
 public class SubscriberController {

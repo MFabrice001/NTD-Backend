@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/images")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+
 public class ImageController {
 
     private final Path uploadDir = Paths.get("uploads");

@@ -23,7 +23,6 @@ import java.util.Random;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

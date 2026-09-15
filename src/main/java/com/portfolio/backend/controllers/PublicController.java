@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/public")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+
 public class PublicController {
 
     private final BlogService blogService;
