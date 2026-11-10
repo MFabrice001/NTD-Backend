@@ -15,12 +15,12 @@ import java.util.Optional;
 public class ContactMessageService {
 
     private final ContactMessageRepository repository;
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;
 
     @Autowired
-    public ContactMessageService(ContactMessageRepository repository, JavaMailSender mailSender) {
+    public ContactMessageService(ContactMessageRepository repository, EmailService emailService) {
         this.repository = repository;
-        this.mailSender = mailSender;
+        this.emailService = emailService;
     }
 
     public List<ContactMessage> getAllMessages() {
@@ -37,26 +37,20 @@ public class ContactMessageService {
         }
         ContactMessage savedMessage = repository.save(message);
 
-        // Send email notification asynchronously so client request returns immediately
-        java.util.concurrent.CompletableFuture.runAsync(() -> {
-            try {
-                SimpleMailMessage mailMessage = new SimpleMailMessage();
-                mailMessage.setTo("ntdbuilddesignsolution@gmail.com");
-                mailMessage.setFrom("ntdbuilddesignsolution@gmail.com");
-                mailMessage.setSubject("New Contact Message from " + message.getFirstName() + " " + message.getLastName());
-                mailMessage.setText(
-                    "You have received a new contact message on your website.\n\n" +
-                    "Name: " + message.getFirstName() + " " + message.getLastName() + "\n" +
-                    "Email: " + message.getEmail() + "\n" +
-                    "Phone: " + (message.getNumber() != null ? message.getNumber() : "N/A") + "\n\n" +
-                    "Message:\n" + message.getMessage() + "\n\n" +
-                    "Log in to the Admin Dashboard to manage your messages."
-                );
-                mailSender.send(mailMessage);
-            } catch (Exception e) {
-                System.err.println("Failed to send email notification: " + e.getMessage());
-            }
-        });
+        // Send email notification asynchronously via Resend API
+        String emailBody = String.format(
+            "You have received a new contact message on your website.\n\n" +
+            "Name: %s %s\n" +
+            "Email: %s\n" +
+            "Phone: %s\n\n" +
+            "Message:\n%s\n\n" +
+            "Log in to the Admin Dashboard to manage your messages.",
+            message.getFirstName(), message.getLastName(),
+            message.getEmail(),
+            (message.getNumber() != null ? message.getNumber() : "N/A"),
+            message.getMessage()
+        );
+        emailService.sendEmailAsync("ntdbuilddesignsolution@gmail.com", "New Contact Message from " + message.getFirstName() + " " + message.getLastName(), emailBody);
 
         return savedMessage;
     }

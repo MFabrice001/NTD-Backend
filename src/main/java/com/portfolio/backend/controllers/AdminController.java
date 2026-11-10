@@ -11,6 +11,7 @@ import com.portfolio.backend.services.FaqService;
 import com.portfolio.backend.services.ProjectService;
 import com.portfolio.backend.services.TeamMemberService;
 import com.portfolio.backend.services.ServiceService;
+import com.portfolio.backend.services.EmailService;
 import com.portfolio.backend.models.Service;
 import com.portfolio.backend.repositories.SiteVisitRepository;
 import com.portfolio.backend.repositories.UserRepository;
@@ -44,10 +45,10 @@ public class AdminController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final SubscriberRepository subscriberRepository;
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;
 
     @Autowired
-    public AdminController(BlogService blogService, FaqService faqService, ProjectService projectService, TeamMemberService teamMemberService, ContactMessageService contactMessageService, ServiceService serviceService, SiteVisitRepository siteVisitRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, SubscriberRepository subscriberRepository, JavaMailSender mailSender) {
+    public AdminController(BlogService blogService, FaqService faqService, ProjectService projectService, TeamMemberService teamMemberService, ContactMessageService contactMessageService, ServiceService serviceService, SiteVisitRepository siteVisitRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, SubscriberRepository subscriberRepository, EmailService emailService) {
         this.blogService = blogService;
         this.faqService = faqService;
         this.projectService = projectService;
@@ -58,7 +59,7 @@ public class AdminController {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.subscriberRepository = subscriberRepository;
-        this.mailSender = mailSender;
+        this.emailService = emailService;
     }
 
     // --- Blogs ---
@@ -69,12 +70,9 @@ public class AdminController {
         java.util.concurrent.CompletableFuture.runAsync(() -> {
             for (Subscriber sub : subscribers) {
                 try {
-                    SimpleMailMessage message = new SimpleMailMessage();
-                    message.setFrom("ntdbuilddesignsolution@gmail.com");
-                    message.setTo(sub.getEmail());
-                    message.setSubject("New Blog Posted: " + createdBlog.getTitle());
-                    message.setText("Hello,\n\nWe just posted a new blog: " + createdBlog.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS");
-                    mailSender.send(message);
+                    String subject = "New Blog Posted: " + createdBlog.getTitle();
+                    String body = "Hello,\n\nWe just posted a new blog: " + createdBlog.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS";
+                    emailService.sendEmail(sub.getEmail(), subject, body);
                 } catch (Exception e) {
                     // Ignore email failure for individual subscriber
                 }
@@ -127,12 +125,9 @@ public class AdminController {
         java.util.concurrent.CompletableFuture.runAsync(() -> {
             for (Subscriber sub : subscribers) {
                 try {
-                    SimpleMailMessage message = new SimpleMailMessage();
-                    message.setFrom("ntdbuilddesignsolution@gmail.com");
-                    message.setTo(sub.getEmail());
-                    message.setSubject("New Project Uploaded: " + createdProject.getTitle());
-                    message.setText("Hello,\n\nWe just uploaded a new project: " + createdProject.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS");
-                    mailSender.send(message);
+                    String subject = "New Project Uploaded: " + createdProject.getTitle();
+                    String body = "Hello,\n\nWe just uploaded a new project: " + createdProject.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS";
+                    emailService.sendEmail(sub.getEmail(), subject, body);
                 } catch (Exception e) {
                     // Ignore email failure for individual subscriber
                 }

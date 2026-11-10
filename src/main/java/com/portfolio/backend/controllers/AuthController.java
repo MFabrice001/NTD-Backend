@@ -23,6 +23,7 @@ import java.util.Random;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import com.portfolio.backend.services.EmailService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,6 +43,9 @@ public class AuthController {
 
     @Autowired
     JavaMailSender mailSender;
+
+    @Autowired
+    EmailService emailService;
 
     private String generateOtp() {
         Random random = new Random();
@@ -71,22 +75,9 @@ public class AuthController {
             System.out.println(">>> [ADMIN LOGIN OTP]: " + otp + " (for: " + recipientEmail + ")");
             System.out.println("==================================================");
 
-            // Send Email to admin
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("ntdbuilddesignsolution@gmail.com");
-            message.setTo(recipientEmail);
-            message.setSubject("Admin Login OTP - NTD Build");
-            message.setText("Your OTP for Admin Login is: " + otp + "\n\nThis OTP will expire in 5 minutes.");
-            
-            // Send asynchronously so the HTTP response returns immediately without blocking
-            CompletableFuture.runAsync(() -> {
-                try {
-                    mailSender.send(message);
-                    System.out.println(">>> OTP email dispatched successfully to: " + recipientEmail);
-                } catch (Exception e) {
-                    System.err.println(">>> FAILED to send OTP email via SMTP: " + e.getMessage());
-                }
-            });
+            // Send Email to admin via Resend HTTP API (works seamlessly on Render Free)
+            String emailBody = "Your OTP for Admin Login is: " + otp + "\n\nThis OTP will expire in 5 minutes.";
+            emailService.sendEmailAsync(recipientEmail, "Admin Login OTP - NTD Build", emailBody);
 
             Map<String, String> response = new HashMap<>();
             response.put("message", "OTP sent successfully to admin email.");
