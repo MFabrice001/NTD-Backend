@@ -63,10 +63,18 @@ public class AuthController {
             user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
             userRepository.save(user);
 
-            // Send Email to realfabrice20@gmail.com for admin
+            String recipientEmail = (user.getEmail() != null && !user.getEmail().isBlank()) 
+                    ? user.getEmail() 
+                    : "realfabrice20@gmail.com";
+
+            System.out.println("==================================================");
+            System.out.println(">>> [ADMIN LOGIN OTP]: " + otp + " (for: " + recipientEmail + ")");
+            System.out.println("==================================================");
+
+            // Send Email to admin
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("ntdbuilddesignsolution@gmail.com");
-            message.setTo("realfabrice20@gmail.com"); // hardcoded as requested by user
+            message.setTo(recipientEmail);
             message.setSubject("Admin Login OTP - NTD Build");
             message.setText("Your OTP for Admin Login is: " + otp + "\n\nThis OTP will expire in 5 minutes.");
             
@@ -74,8 +82,9 @@ public class AuthController {
             CompletableFuture.runAsync(() -> {
                 try {
                     mailSender.send(message);
+                    System.out.println(">>> OTP email dispatched successfully to: " + recipientEmail);
                 } catch (Exception e) {
-                    System.err.println("Failed to send OTP email: " + e.getMessage());
+                    System.err.println(">>> FAILED to send OTP email via SMTP: " + e.getMessage());
                 }
             });
 
