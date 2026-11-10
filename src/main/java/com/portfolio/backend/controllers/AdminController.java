@@ -66,17 +66,20 @@ public class AdminController {
     public ResponseEntity<Blog> createBlog(@RequestBody Blog blog) {
         Blog createdBlog = blogService.createBlog(blog);
         List<Subscriber> subscribers = subscriberRepository.findAll();
-        for (Subscriber sub : subscribers) {
-            try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setTo(sub.getEmail());
-                message.setSubject("New Blog Posted: " + createdBlog.getTitle());
-                message.setText("Hello,\n\nWe just posted a new blog: " + createdBlog.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS");
-                mailSender.send(message);
-            } catch (Exception e) {
-                // Ignore email failure for individual subscriber
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            for (Subscriber sub : subscribers) {
+                try {
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setFrom("ntdbuilddesignsolution@gmail.com");
+                    message.setTo(sub.getEmail());
+                    message.setSubject("New Blog Posted: " + createdBlog.getTitle());
+                    message.setText("Hello,\n\nWe just posted a new blog: " + createdBlog.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS");
+                    mailSender.send(message);
+                } catch (Exception e) {
+                    // Ignore email failure for individual subscriber
+                }
             }
-        }
+        });
         return ResponseEntity.ok(createdBlog);
     }
 
@@ -121,17 +124,20 @@ public class AdminController {
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
         Project createdProject = projectService.createProject(project);
         List<Subscriber> subscribers = subscriberRepository.findAll();
-        for (Subscriber sub : subscribers) {
-            try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setTo(sub.getEmail());
-                message.setSubject("New Project Uploaded: " + createdProject.getTitle());
-                message.setText("Hello,\n\nWe just uploaded a new project: " + createdProject.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS");
-                mailSender.send(message);
-            } catch (Exception e) {
-                // Ignore email failure for individual subscriber
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            for (Subscriber sub : subscribers) {
+                try {
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setFrom("ntdbuilddesignsolution@gmail.com");
+                    message.setTo(sub.getEmail());
+                    message.setSubject("New Project Uploaded: " + createdProject.getTitle());
+                    message.setText("Hello,\n\nWe just uploaded a new project: " + createdProject.getTitle() + "\n\nCheck it out on our website!\n\nBest,\nNTD BUILD & DESIGN SOLUTIONS");
+                    mailSender.send(message);
+                } catch (Exception e) {
+                    // Ignore email failure for individual subscriber
+                }
             }
-        }
+        });
         return ResponseEntity.ok(createdProject);
     }
 

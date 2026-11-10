@@ -37,24 +37,26 @@ public class ContactMessageService {
         }
         ContactMessage savedMessage = repository.save(message);
 
-        // Send email notification
-        try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo("ntdbuilddesignsolution@gmail.com");
-            mailMessage.setFrom("ntdbuilddesignsolution@gmail.com");
-            mailMessage.setSubject("New Contact Message from " + message.getFirstName() + " " + message.getLastName());
-            mailMessage.setText(
-                "You have received a new contact message on your website.\n\n" +
-                "Name: " + message.getFirstName() + " " + message.getLastName() + "\n" +
-                "Email: " + message.getEmail() + "\n" +
-                "Phone: " + (message.getNumber() != null ? message.getNumber() : "N/A") + "\n\n" +
-                "Message:\n" + message.getMessage() + "\n\n" +
-                "Log in to the Admin Dashboard to manage your messages."
-            );
-            mailSender.send(mailMessage);
-        } catch (Exception e) {
-            System.err.println("Failed to send email notification: " + e.getMessage());
-        }
+        // Send email notification asynchronously so client request returns immediately
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            try {
+                SimpleMailMessage mailMessage = new SimpleMailMessage();
+                mailMessage.setTo("ntdbuilddesignsolution@gmail.com");
+                mailMessage.setFrom("ntdbuilddesignsolution@gmail.com");
+                mailMessage.setSubject("New Contact Message from " + message.getFirstName() + " " + message.getLastName());
+                mailMessage.setText(
+                    "You have received a new contact message on your website.\n\n" +
+                    "Name: " + message.getFirstName() + " " + message.getLastName() + "\n" +
+                    "Email: " + message.getEmail() + "\n" +
+                    "Phone: " + (message.getNumber() != null ? message.getNumber() : "N/A") + "\n\n" +
+                    "Message:\n" + message.getMessage() + "\n\n" +
+                    "Log in to the Admin Dashboard to manage your messages."
+                );
+                mailSender.send(mailMessage);
+            } catch (Exception e) {
+                System.err.println("Failed to send email notification: " + e.getMessage());
+            }
+        });
 
         return savedMessage;
     }

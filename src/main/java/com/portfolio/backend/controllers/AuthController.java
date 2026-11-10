@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -64,10 +65,19 @@ public class AuthController {
 
             // Send Email to realfabrice20@gmail.com for admin
             SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("ntdbuilddesignsolution@gmail.com");
             message.setTo("realfabrice20@gmail.com"); // hardcoded as requested by user
             message.setSubject("Admin Login OTP - NTD Build");
-            message.setText("Your OTP for Admin Login is: " + otp + "\n\nThis OTP will expire in 10 minutes.");
-            mailSender.send(message);
+            message.setText("Your OTP for Admin Login is: " + otp + "\n\nThis OTP will expire in 5 minutes.");
+            
+            // Send asynchronously so the HTTP response returns immediately without blocking
+            CompletableFuture.runAsync(() -> {
+                try {
+                    mailSender.send(message);
+                } catch (Exception e) {
+                    System.err.println("Failed to send OTP email: " + e.getMessage());
+                }
+            });
 
             Map<String, String> response = new HashMap<>();
             response.put("message", "OTP sent successfully to admin email.");
