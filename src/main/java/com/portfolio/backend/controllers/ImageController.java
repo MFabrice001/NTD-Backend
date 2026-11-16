@@ -57,4 +57,33 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PostMapping("/upload-multiple")
+    public ResponseEntity<Map<String, Object>> uploadMultipleImages(@RequestParam("files") MultipartFile[] files) {
+        Map<String, Object> response = new HashMap<>();
+        java.util.List<String> urls = new java.util.ArrayList<>();
+        try {
+            if (files != null) {
+                for (MultipartFile file : files) {
+                    if (file == null || file.isEmpty()) continue;
+                    String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+                    String fileExtension = "";
+                    if (originalFileName.contains(".")) {
+                        fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    }
+                    String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+                    Path filePath = uploadDir.resolve(uniqueFileName);
+                    try (InputStream inputStream = file.getInputStream()) {
+                        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    urls.add("/uploads/" + uniqueFileName);
+                }
+            }
+            response.put("urls", urls);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", "Failed to upload files: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

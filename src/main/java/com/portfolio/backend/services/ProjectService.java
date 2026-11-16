@@ -32,6 +32,9 @@ public class ProjectService {
             project.setLocation(updatedProject.getLocation());
             project.setYear(updatedProject.getYear());
             project.setImageUrl(updatedProject.getImageUrl());
+            project.setImageUrls(updatedProject.getImageUrls());
+            project.setVideoUrl(updatedProject.getVideoUrl());
+            project.setDescription(updatedProject.getDescription());
             return projectRepository.save(project);
         }).orElseThrow(() -> new RuntimeException("Project not found with id " + id));
     }
