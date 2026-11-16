@@ -69,7 +69,7 @@ public class AuthController {
 
             String recipientEmail = (user.getEmail() != null && !user.getEmail().isBlank()) 
                     ? user.getEmail() 
-                    : "realfabrice20@gmail.com";
+                    : "m.fabrice001@gmail.com";
 
             System.out.println("==================================================");
             System.out.println(">>> [ADMIN LOGIN OTP]: " + otp + " (for: " + recipientEmail + ")");

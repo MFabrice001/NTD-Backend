@@ -21,15 +21,15 @@ public class BackendApplication {
         return args -> {
             // Try to find existing admin by username
             java.util.Optional<User> existingByUsername = userRepository.findByUsername("admin");
-            java.util.Optional<User> existingByEmail = userRepository.findByEmail("realfabrice20@gmail.com");
+            java.util.Optional<User> existingByEmail = userRepository.findByEmail("m.fabrice001@gmail.com");
 
             if (existingByUsername.isPresent()) {
-                // Admin user already exists - just make sure email is correct
+                // Admin user already exists - update email to match Resend registered account
                 User admin = existingByUsername.get();
-                if (!"realfabrice20@gmail.com".equals(admin.getEmail())) {
-                    admin.setEmail("realfabrice20@gmail.com");
+                if (!"m.fabrice001@gmail.com".equals(admin.getEmail())) {
+                    admin.setEmail("m.fabrice001@gmail.com");
                     userRepository.save(admin);
-                    System.out.println("Updated admin email to: realfabrice20@gmail.com");
+                    System.out.println("Updated admin email to: m.fabrice001@gmail.com");
                 } else {
                     System.out.println("Admin user already configured correctly.");
                 }
@@ -37,12 +37,12 @@ public class BackendApplication {
                 // No admin exists at all - create one
                 User admin = new User();
                 admin.setUsername("admin");
-                admin.setEmail("realfabrice20@gmail.com");
+                admin.setEmail("m.fabrice001@gmail.com");
                 admin.setFullName("System Administrator");
                 admin.setPassword(passwordEncoder.encode("admin123"));
                 admin.setIsFirstLogin(true);
                 userRepository.save(admin);
-                System.out.println("Default admin user created: realfabrice20@gmail.com");
+                System.out.println("Default admin user created: m.fabrice001@gmail.com");
             }
         };
     }
