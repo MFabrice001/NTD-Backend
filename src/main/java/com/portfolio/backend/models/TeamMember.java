@@ -27,6 +27,7 @@ public class TeamMember {
     @Column(columnDefinition = "TEXT")
     private String quote;
 
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     @Column(updatable = false)
