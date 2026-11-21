@@ -30,6 +30,7 @@ public class Project {
     
     private String year;
 
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
